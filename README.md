@@ -1,2 +1,2 @@
 # WC-SSM
-The WRF-Chem Model Coupled with the simpleSOM-MOSAIC model for simulation of secondary organic aerosol
+The WRF-Chem Model Coupled with the simpleSOM-MOSAIC Model for Simulation of Secondary Organic Aerosol
