@@ -1,0 +1,29 @@
+
+
+     MODULE MOD_TEST
+
+     INTEGER,PRIVATE :: XXX
+
+
+     CONTAINS
+
+     SUBROUTINE SET_XXX(IN_XXX)
+     INTEGER IN_XXX
+
+     XXX = IN_XXX
+     
+     RETURN
+     END SUBROUTINE SET_XXX
+     
+     SUBROUTINE PRINT_XXX()
+       
+     PRINT*, 'XXX = ',XXX
+       
+     RETURN 
+     END SUBROUTINE PRINT_XXX
+
+
+
+
+     END MODULE MOD_TEST
+
