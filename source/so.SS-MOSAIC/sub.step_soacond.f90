@@ -134,7 +134,7 @@
          FUCHS = 0.75*aCOMM*(1.0 + KNUD)/(KNUD*(KNUD + 1.0) + 0.283*aCOMM*KNUD + 0.75*aCOMM)
 
 !        ^^ GAS-PHASE DIFFUSIVITY [m2 s-1]:
-         DIFFg = 1.38e-4*44.0/MW_SS(j)
+         DIFFg = 1.38e-5*44.0/MW_SS(j)
 
 !        ^^ GET THE CONDENSATION SINK:
          KTg = DIFFg/(0.5*DIAM(k)*1e-9)*FUCHS
