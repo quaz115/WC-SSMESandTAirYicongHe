@@ -5,6 +5,7 @@
 !                   Saulo Freitas (CPTEC), and Georg Grell
 !
 !
+! QZR++ (CIRES/NOAA): oVCPs added from RACM2b_vcp (mapping to SSM) for BEIS3.14
 MODULE module_emissions_driver
    IMPLICIT NONE
 CONTAINS
@@ -27,12 +28,17 @@ CONTAINS
          sebio_iso,sebio_oli,sebio_api,sebio_lim,sebio_xyl,                &
          sebio_hc3,sebio_ete,sebio_olt,sebio_ket,sebio_ald,                &   
          sebio_hcho,sebio_eth,sebio_ora2,sebio_co,sebio_nr,                &
-         sebio_sesq,sebio_mbo,                                             & 
+         sebio_sesq,sebio_mbo,                                             &
+         sebio_moh,sebio_eoh,sebio_act,                                    &
+         sebio_acd,sebio_ora1,sebio_eclp,                                  & 
          noag_grow,noag_nongrow,nononag,slai,                              &
          ebio_iso,ebio_oli,ebio_api,ebio_lim,ebio_xyl,                     &
          ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,                     &
          ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,             &
-         ebio_sesq, ebio_mbo,ebio_bpi,ebio_myrc,                           &
+         ebio_sesq, ebio_mbo,                                              &
+         ebio_moh,ebio_eoh,ebio_act,                                       &
+         ebio_acd,ebio_ora1,ebio_eclp,                                     &
+         ebio_bpi,ebio_myrc,                                               &
          ebio_c10h16,ebio_tol,ebio_bigalk,ebio_ch3oh,ebio_acet,            &
          ebio_nh3,ebio_no2,ebio_c2h5oh,ebio_ch3cooh,ebio_mek,              &
          ebio_bigene,ebio_c2h6,ebio_c2h4,ebio_c3h6,ebio_c3h8,ebio_so2,     &
@@ -235,6 +241,8 @@ CONTAINS
   REAL, DIMENSION( ims:ime, config_flags%num_soil_layers, jms:jme ) ,      &
       INTENT(INOUT ) ::                             smois, tslb    
 
+   
+   !QZR++ (CIRES/NOAA) oVCPs from RACM2b_vcp for BEIS3.14, mapping to SSM 
    REAL,  DIMENSION( ims:ime , jms:jme )                   ,               &
          OPTIONAL,                                                         &
           INTENT(INOUT   ) ::                                                 &
@@ -242,11 +250,16 @@ CONTAINS
                sebio_hc3,sebio_ete,sebio_olt,sebio_ket,sebio_ald,      &
                sebio_hcho,sebio_eth,sebio_ora2,sebio_co,sebio_nr,      &
                sebio_sesq,sebio_mbo,                                   & 
+               sebio_moh,sebio_eoh,sebio_act,                          &
+               sebio_acd,sebio_ora1,sebio_eclp,                        &
                noag_grow,noag_nongrow,nononag,slai,                    &
                ebio_iso,ebio_oli,ebio_api,ebio_lim,ebio_xyl,           &
                ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,           &
                ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,   &
-               ebio_sesq,ebio_mbo,ebio_bpi,ebio_myrc,                  &
+               ebio_sesq,ebio_mbo,                                     &
+               ebio_moh,ebio_eoh,ebio_act,                             &
+               ebio_acd,ebio_ora1,ebio_eclp,                           &
+               ebio_bpi,ebio_myrc,                                     &
                ebio_c10h16,ebio_tol,ebio_bigalk, ebio_ch3oh,ebio_acet, &
                ebio_nh3,ebio_no2,ebio_c2h5oh,ebio_ch3cooh,ebio_mek,    &
                ebio_bigene,ebio_c2h6,ebio_c2h4,ebio_c3h6,ebio_c3h8,    &
@@ -826,6 +839,8 @@ CONTAINS
 !  endif !---YZ0220
 !!**************** END FIRE, BEGIN BIOGENIC EMISSIONS
 !
+!  QZR++ oVCPs added from RACM2b_vcp for beis , mapping to SSM 
+! QZR++ for running BEIS add SAPRC99_SIMPLESOM_MOSAIC_4BIN_AQ_KPP in list of mechs Line 855
     bioem_select: SELECT CASE(config_flags%bio_emiss_opt)
      CASE (GUNTHER1)
        if(ktau.eq.1.or.mod(ktau,stepbioe).eq.0)then
@@ -844,6 +859,7 @@ CONTAINS
             CASE (RADM2, RADM2_KPP, RADM2SORG, RADM2SORG_AQ, RADM2SORG_AQCHEM, RADM2SORG_KPP, &
                   RACM_KPP, RACMPM_KPP, RACM_MIM_KPP, RACMSORG_AQ,RACMSORG_AQCHEM_KPP,        &
                   RACM_ESRLSORG_AQCHEM_KPP, RACMSORG_KPP,RACM_ESRLSORG_KPP, RACM_SOA_VBS_KPP, &
+                  SAPRC99_SIMPLESOM_MOSAIC_4BIN_AQ_KPP,                                       &
                   RACM_SOA_VBS_AQCHEM_KPP, RACM_SOA_VBS_HET_KPP, CBM4_KPP, NMHC9_KPP, GOCARTRACM_KPP,GOCARTRADM2)
             CASE DEFAULT 
                CALL wrf_error_fatal( &
@@ -856,11 +872,15 @@ CONTAINS
                sebio_hc3,sebio_ete,sebio_olt,sebio_ket,sebio_ald,      &
                sebio_hcho,sebio_eth,sebio_ora2,sebio_co,sebio_nr,      &
                sebio_sesq,sebio_mbo,                                   &
+               sebio_moh,sebio_eoh,sebio_act,                          &
+               sebio_acd,sebio_ora1,sebio_eclp,                        &
                noag_grow,noag_nongrow,nononag,slai,                    &
                ebio_iso,ebio_oli,ebio_api,ebio_lim,ebio_xyl,           &
                ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,           &
                ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,   &
                ebio_sesq,ebio_mbo,                                     &
+               ebio_moh,ebio_eoh,ebio_act,                             &
+               ebio_acd,ebio_ora1,ebio_eclp,                           &
                ids,ide, jds,jde, kds,kde,                              &
                ims,ime, jms,jme, kms,kme,                              &
                its,ite, jts,jte, kts,kte                               )
@@ -1008,6 +1028,7 @@ CONTAINS
 
 !!! **************** END BIOGENICS, ADD EMISSIONS FOR VARIOUS PACKAGES
 !
+! QZR++ oVOCs added to add_biogenics for RACM2b_VCP to SSM mapping for BEIS3.14
     gas_addemiss_select: SELECT CASE(config_flags%chem_opt)
     CASE (RADM2, RADM2_KPP, RADM2SORG, RADM2SORG_AQ, RADM2SORG_AQCHEM, RADM2SORG_KPP, &
           RACM_KPP, RACMPM_KPP, RACM_MIM_KPP, RACMSORG_AQ, RACMSORG_AQCHEM_KPP, RACM_ESRLSORG_AQCHEM_KPP, RACMSORG_KPP, &
@@ -1033,6 +1054,8 @@ CONTAINS
             ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,               &
             ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,       &
             ebio_sesq,ebio_mbo,                                         & 
+            ebio_moh,ebio_eoh,ebio_act,                                 &
+            ebio_acd,ebio_ora1,ebio_eclp,                               &
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )
@@ -1075,6 +1098,8 @@ CONTAINS
             ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,               &
             ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,       &
             ebio_sesq,ebio_mbo,                                         & 
+            ebio_moh,ebio_eoh,ebio_act,                                 &
+            ebio_acd,ebio_ora1,ebio_eclp,                               &
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )
@@ -1100,6 +1125,8 @@ CONTAINS
             ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,               &
             ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,       &
             ebio_sesq,ebio_mbo,                                         &
+            ebio_moh,ebio_eoh,ebio_act,                                 &
+            ebio_acd,ebio_ora1,ebio_eclp,                               &
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )
@@ -1300,6 +1327,8 @@ CONTAINS
             ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,               &
             ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,       &
             ebio_sesq,ebio_mbo,                                         & 
+            ebio_moh,ebio_eoh,ebio_act,                                 &
+            ebio_acd,ebio_ora1,ebio_eclp,                               &
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )
@@ -1460,7 +1489,9 @@ CONTAINS
             ebio_iso,ebio_oli,ebio_api,ebio_lim,ebio_xyl,               &
             ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,               &
             ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,       &
-            ebio_sesq,ebio_mbo,                                         & 
+            ebio_sesq,ebio_mbo,                                         &
+            ebio_moh,ebio_eoh,ebio_act,                                 &
+            ebio_acd,ebio_ora1,ebio_eclp,                               & 
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )
@@ -1468,7 +1499,10 @@ CONTAINS
 
       CASE (SAPRC99_MOSAIC_4BIN_IEPOX_VBS_AQ_KPP, SAPRC99_SIMPLESOM_MOSAIC_4BIN_AQ_KPP)
       
-      COND1: IF (config_flags%emiss_opt == 13 ) THEN
+      !COND1: IF (config_flags%emiss_opt == 13 ) THEN
+      !QZR++ for Anth Mapping
+      !RACM2b_vcp to SSM mapping
+      COND1: IF (config_flags%emiss_opt == 13 .or. config_flags%emiss_opt == 3 ) THEN
       
        do j = jts,jte
           do i = its,ite
@@ -1482,47 +1516,80 @@ CONTAINS
                 conv4= (dtstep/dz8w(i,k,j))*alt(i,k,j)*28/226*1e-3  ! Molecular weight of C(15)H(27)N(0.3)O(0.9)
                 oconv3= (dtstep/dz8w(i,k,j))*alt(i,k,j)*28/283*1e-3*4.5 !For biomass there are 4.5 moles of ) /mole of C15H27N0.3
                 oconv4=(dtstep/dz8w(i,k,j))*alt(i,k,j)*28/226*1e-3*0.9  !For fossil there are 0.9 moles of O per mole of C15H27N0.3
-
-
+                
+                ! Qzr++: p_C3H8, p_C3H6 mapped to p_e_c3h8 & p_e_c3h6 respectively 
+                ! Also see fix for p_e_ket (isoprod can be separate) & p_e_ora2 (cco_oh can be separate)
                 chem(i,k,j,p_so2)  = chem(i,k,j,p_so2)                             &
                      +emis_ant(i,k,j,p_e_so2)*conv*config_flags%uq_so2
+                !chem(i,k,j,p_c2h6)  = chem(i,k,j,p_c2h6)                           &
+                !     +emis_ant(i,k,j,p_e_c2h6)*conv
                 chem(i,k,j,p_c2h6)  = chem(i,k,j,p_c2h6)                           &
-                     +emis_ant(i,k,j,p_e_c2h6)*conv
+                     +emis_ant(i,k,j,p_e_eth)*conv
+                !chem(i,k,j,p_c3h8)  = chem(i,k,j,p_c3h8)                           &
+                !     +emis_ant(i,k,j,p_e_c3h8)*conv
                 chem(i,k,j,p_c3h8)  = chem(i,k,j,p_c3h8)                           &
-                     +emis_ant(i,k,j,p_e_c3h8)*conv
+                     +emis_ant(i,k,j,p_e_c3h8)*conv      
+                !qzr++ FIXED, e_c3h8 in charkins RACM2bvcp wrfchemi now, 06/2023
+                !chem(i,k,j,p_c2h2)  = chem(i,k,j,p_c2h2)                           &
+                !     +emis_ant(i,k,j,p_e_c2h2)*conv
                 chem(i,k,j,p_c2h2)  = chem(i,k,j,p_c2h2)                           &
-                     +emis_ant(i,k,j,p_e_c2h2)*conv
+                     +emis_ant(i,k,j,p_e_ace)*conv
+                !chem(i,k,j,p_alk3)  = chem(i,k,j,p_alk3)                           &
+                !     +emis_ant(i,k,j,p_e_alk3)*conv
                 chem(i,k,j,p_alk3)  = chem(i,k,j,p_alk3)                           &
-                     +emis_ant(i,k,j,p_e_alk3)*conv
+                     +emis_ant(i,k,j,p_e_hc3)*conv
+                !chem(i,k,j,p_alk4)  = chem(i,k,j,p_alk4)                           &
+                !     +emis_ant(i,k,j,p_e_alk4)*conv
                 chem(i,k,j,p_alk4)  = chem(i,k,j,p_alk4)                           &
-                     +emis_ant(i,k,j,p_e_alk4)*conv
+                     +emis_ant(i,k,j,p_e_hc5)*conv
 
 !!!!!!!!!!!!!!!!!!! CHARLES HE
                 !!CYCLE
 
-
+                !chem(i,k,j,p_alk5)  = chem(i,k,j,p_alk5)                           &
+                !     +emis_ant(i,k,j,p_e_alk5)*conv
                 chem(i,k,j,p_alk5)  = chem(i,k,j,p_alk5)                           &
-                     +emis_ant(i,k,j,p_e_alk5)*conv
+                     +emis_ant(i,k,j,p_e_hc8)*conv
+                !chem(i,k,j,p_ethene)  = chem(i,k,j,p_ethene)                       &
+                !     +emis_ant(i,k,j,p_e_ethene)*conv
                 chem(i,k,j,p_ethene)  = chem(i,k,j,p_ethene)                       &
-                     +emis_ant(i,k,j,p_e_ethene)*conv
+                     +emis_ant(i,k,j,p_e_ol2)*conv
+                !chem(i,k,j,p_c3h6)  = chem(i,k,j,p_c3h6)                           &
+                !     +emis_ant(i,k,j,p_e_c3h6)*conv
                 chem(i,k,j,p_c3h6)  = chem(i,k,j,p_c3h6)                           &
                      +emis_ant(i,k,j,p_e_c3h6)*conv
+                !chem(i,k,j,p_ole1)  = chem(i,k,j,p_ole1)                           &
+                !     +emis_ant(i,k,j,p_e_ole1)*conv
                 chem(i,k,j,p_ole1)  = chem(i,k,j,p_ole1)                           &
-                     +emis_ant(i,k,j,p_e_ole1)*conv
+                     +emis_ant(i,k,j,p_e_olt)*conv
+                !chem(i,k,j,p_ole2)  = chem(i,k,j,p_ole2)                           &
+                !     +emis_ant(i,k,j,p_e_ole2)*conv
                 chem(i,k,j,p_ole2)  = chem(i,k,j,p_ole2)                           &
-                     +emis_ant(i,k,j,p_e_ole2)*conv
+                     +(emis_ant(i,k,j,p_e_oli)+emis_ant(i,k,j,p_e_dien))*conv
+                !chem(i,k,j,p_aro1)  = chem(i,k,j,p_aro1)                           &
+                !     +emis_ant(i,k,j,p_e_aro1)*conv
                 chem(i,k,j,p_aro1)  = chem(i,k,j,p_aro1)                           &
-                     +emis_ant(i,k,j,p_e_aro1)*conv
+                     +emis_ant(i,k,j,p_e_ben)*conv
+                !chem(i,k,j,p_aro2)  = chem(i,k,j,p_aro2)                           &
+                !     +emis_ant(i,k,j,p_e_aro2)*conv
                 chem(i,k,j,p_aro2)  = chem(i,k,j,p_aro2)                           &
-                     +emis_ant(i,k,j,p_e_aro2)*conv
+                     +(emis_ant(i,k,j,p_e_tol)+emis_ant(i,k,j,p_e_xyl)+            &
+                      emis_ant(i,k,j,p_e_xyo))*conv
                 chem(i,k,j,p_hcho)  = chem(i,k,j,p_hcho)                           &
                      +emis_ant(i,k,j,p_e_hcho)*conv
+                !chem(i,k,j,p_ccho)  = chem(i,k,j,p_ccho)                           &
+                !     +emis_ant(i,k,j,p_e_ccho)*conv
                 chem(i,k,j,p_ccho)  = chem(i,k,j,p_ccho)                           &
-                     +emis_ant(i,k,j,p_e_ccho)*conv
+                     +emis_ant(i,k,j,p_e_acd)*conv
+                !chem(i,k,j,p_rcho)  = chem(i,k,j,p_rcho)                           &
+                !     +emis_ant(i,k,j,p_e_rcho)*conv
                 chem(i,k,j,p_rcho)  = chem(i,k,j,p_rcho)                           &
-                     +emis_ant(i,k,j,p_e_rcho)*conv
+                     +(emis_ant(i,k,j,p_e_ald)+emis_ant(i,k,j,p_e_cald)+           &
+                       emis_ant(i,k,j,p_e_oald)+emis_ant(i,k,j,p_e_nald))*conv
+                !chem(i,k,j,p_acet)  = chem(i,k,j,p_acet)                           &
+                !     +emis_ant(i,k,j,p_e_acet)*conv
                 chem(i,k,j,p_acet)  = chem(i,k,j,p_acet)                           &
-                     +emis_ant(i,k,j,p_e_acet)*conv
+                     +emis_ant(i,k,j,p_e_act)*conv
 
 !!!!!!!!!!!!!!!!!!! CHARLES HE
                 !!CYCLE
@@ -1530,11 +1597,18 @@ CONTAINS
                 chem(i,k,j,p_mek)  = chem(i,k,j,p_mek)                             &
                      +emis_ant(i,k,j,p_e_mek)*conv
 
+                !chem(i,k,j,p_isoprene)  = chem(i,k,j,p_isoprene)                   &
+                !     +emis_ant(i,k,j,p_e_isoprene)*conv
                 chem(i,k,j,p_isoprene)  = chem(i,k,j,p_isoprene)                   &
-                     +emis_ant(i,k,j,p_e_isoprene)*conv
+                     +emis_ant(i,k,j,p_e_iso)*conv
 
+                !chem(i,k,j,p_terp)  = chem(i,k,j,p_terp)                           &
+                !     +emis_ant(i,k,j,p_e_terp)*conv
                 chem(i,k,j,p_terp)  = chem(i,k,j,p_terp)                           &
-                     +emis_ant(i,k,j,p_e_terp)*conv
+                     +(emis_ant(i,k,j,p_e_terp)+emis_ant(i,k,j,p_e_api)+           &
+                        emis_ant(i,k,j,p_e_lim)+emis_ant(i,k,j,p_e_euc))*conv !qzr++ 11/24 rac2bVCP3 emis_ant updates
+                
+
 
                 chem(i,k,j,p_sesq)  = chem(i,k,j,p_sesq)                           &
                      +emis_ant(i,k,j,p_e_sesq)*conv
@@ -1545,8 +1619,12 @@ CONTAINS
                 chem(i,k,j,p_no)  = chem(i,k,j,p_no)                               &
                      +emis_ant(i,k,j,p_e_no)*conv*config_flags%uq_nox
 
-                chem(i,k,j,p_etoh)  = chem(i,k,j,p_etoh)&
-                     +emis_ant(i,k,j,p_e_etoh)*conv
+                !chem(i,k,j,p_etoh)  = chem(i,k,j,p_etoh)&
+                !     +emis_ant(i,k,j,p_e_etoh)*conv
+                chem(i,k,j,p_etoh)  = chem(i,k,j,p_etoh) &
+                        +(emis_ant(i,k,j,p_e_eoh)+emis_ant(i,k,j,p_e_roh))*conv 
+                !qzr++ 11/24 RACM2BVCP3 ROH added with ethoh for now
+                !     +emis_ant(i,k,j,p_e_eoh)*conv
                 
                 
                 !PRINT*, 'p_MEK = ', p_MEK
@@ -1580,34 +1658,50 @@ CONTAINS
                      +emis_ant(i,k,j,p_e_no2)*conv*config_flags%uq_nox
                 chem(i,k,j,p_phen)  = chem(i,k,j,p_phen)                           &
                      +emis_ant(i,k,j,p_e_phen)*conv
+                !chem(i,k,j,p_cres)  = chem(i,k,j,p_cres)                           &
+                !     +emis_ant(i,k,j,p_e_cres)*conv
                 chem(i,k,j,p_cres)  = chem(i,k,j,p_cres)                           &
-                     +emis_ant(i,k,j,p_e_cres)*conv
+                     +(emis_ant(i,k,j,p_e_csl)+emis_ant(i,k,j,p_e_mct))*conv
+                !chem(i,k,j,p_meoh)  = chem(i,k,j,p_meoh)                           &
+                !     +emis_ant(i,k,j,p_e_meoh)*conv
                 chem(i,k,j,p_meoh)  = chem(i,k,j,p_meoh)                           &
-                     +emis_ant(i,k,j,p_e_meoh)*conv
+                     +emis_ant(i,k,j,p_e_moh)*conv
                 chem(i,k,j,p_gly)  = chem(i,k,j,p_gly)                             &
                      +emis_ant(i,k,j,p_e_gly)*conv
                 chem(i,k,j,p_mgly)  = chem(i,k,j,p_mgly)                           &
                      +emis_ant(i,k,j,p_e_mgly)*conv
                 chem(i,k,j,p_bacl)  = chem(i,k,j,p_bacl)                           &
                      +emis_ant(i,k,j,p_e_bacl)*conv
-                chem(i,k,j,p_isoprod)  = chem(i,k,j,p_isoprod)                     &
+                !chem(i,k,j,p_isoprod)  = chem(i,k,j,p_isoprod)                     &
+                !     +emis_ant(i,k,j,p_e_isoprod)*conv
+                chem(i,k,j,p_isoprod)  = chem(i,k,j,p_isoprod)                      &
                      +emis_ant(i,k,j,p_e_isoprod)*conv
+                !chem(i,k,j,p_methacro)  = chem(i,k,j,p_methacro)                   &
+                !     +emis_ant(i,k,j,p_e_methacro)*conv
                 chem(i,k,j,p_methacro)  = chem(i,k,j,p_methacro)                   &
-                     +emis_ant(i,k,j,p_e_methacro)*conv
+                     +(emis_ant(i,k,j,p_e_macr)+emis_ant(i,k,j,p_e_cuald))*conv
                 chem(i,k,j,p_mvk)  = chem(i,k,j,p_mvk)                             &
                      +emis_ant(i,k,j,p_e_mvk)*conv
+                !chem(i,k,j,p_prod2)  = chem(i,k,j,p_prod2)                         &
+                !     +emis_ant(i,k,j,p_e_prod2)*conv
                 chem(i,k,j,p_prod2)  = chem(i,k,j,p_prod2)                         &
-                     +emis_ant(i,k,j,p_e_prod2)*conv
+                     +emis_ant(i,k,j,p_e_ket)*conv
                 chem(i,k,j,p_ch4)  = chem(i,k,j,p_ch4)                             &
                      +emis_ant(i,k,j,p_e_ch4)*conv
                 chem(i,k,j,p_bald)  = chem(i,k,j,p_bald)                           &
                      +emis_ant(i,k,j,p_e_bald)*conv
+                !chem(i,k,j,p_hcooh)  = chem(i,k,j,p_hcooh)                         &
+                !     +emis_ant(i,k,j,p_e_hcooh)*conv
                 chem(i,k,j,p_hcooh)  = chem(i,k,j,p_hcooh)                         &
-                     +emis_ant(i,k,j,p_e_hcooh)*conv
+                     +emis_ant(i,k,j,p_e_ora1)*conv
+                !chem(i,k,j,p_cco_oh)  = chem(i,k,j,p_cco_oh)                       &
+                !     +emis_ant(i,k,j,p_e_cco_oh)*conv
                 chem(i,k,j,p_cco_oh)  = chem(i,k,j,p_cco_oh)                       &
                      +emis_ant(i,k,j,p_e_cco_oh)*conv
-                chem(i,k,j,p_rco_oh)  = chem(i,k,j,p_rco_oh)                       &
-                     +emis_ant(i,k,j,p_e_rco_oh)*conv
+                !chem(i,k,j,p_rco_oh)  = chem(i,k,j,p_rco_oh)                       &
+                !     +emis_ant(i,k,j,p_e_rco_oh)*conv
+                chem(i,k,j,p_rco_oh)  = chem(i,k,j,p_rco_oh)                 &
+                     +emis_ant(i,k,j,p_e_ora2)*conv
                 chem(i,k,j,p_nh3)  = chem(i,k,j,p_nh3)                       &
                      +emis_ant(i,k,j,p_e_nh3)*conv
 
@@ -1618,8 +1712,11 @@ CONTAINS
 
 
 ! THIS IS POA MASS????
-         chem(i,k,j,p_pcg1_f_c) = & 
-         chem(i,k,j,p_pcg1_f_c) + (emis_ant(i,k,j,p_e_orgi_a) + emis_ant(i,k,j,p_e_orgj_a))*conv3*1.4 
+         !chem(i,k,j,p_pcg1_f_c) = & 
+         !chem(i,k,j,p_pcg1_f_c) + (emis_ant(i,k,j,p_e_orgi_a) + emis_ant(i,k,j,p_e_orgj_a))*conv3*1.4 
+         !QZR++: 2025 Edit, 1.4 OM/OC avg of 1.57 and 1.25, NOT needed Since Colin's RACM2bvcp wrfchemi is in OM ug
+         chem(i,k,j,p_pcg1_f_c) =   &
+         chem(i,k,j,p_pcg1_f_c) + (emis_ant(i,k,j,p_e_orgi) + emis_ant(i,k,j,p_e_orgj))*conv3  
 
 ! VOCALS is OC for fossil fuel, apply 1.4 to convert to OM                       
 ! Biomass burning POA is now part of OC array in module_add_emiss_burn.F
@@ -1629,39 +1726,92 @@ CONTAINS
 
 !!!! HERE THE EMISSION OF IVOCs IS DEFINED. !Accounts for evaporat of 60% of POA (Jathar et al. PNAS)
 
-         chem(i,k,j,p_pcg7_f_c)  =  & 
-         chem(i,k,j,p_pcg7_f_c)  + (emis_ant(i,k,j,p_e_c2h6)*conv  &
-                                 +  emis_ant(i,k,j,p_e_c3h8)*conv  &
-                                   +emis_ant(i,k,j,p_e_c2h2)*conv  &
-                                   +emis_ant(i,k,j,p_e_alk3)*conv  &
-                                   +emis_ant(i,k,j,p_e_alk4)*conv  &
-                                   +emis_ant(i,k,j,p_e_alk5)*conv  &
-                                   +emis_ant(i,k,j,p_e_ethene)*conv &
-                                   +emis_ant(i,k,j,p_e_c3h6)*conv   &
-                                   +emis_ant(i,k,j,p_e_ole1)*conv   &
-                                   +emis_ant(i,k,j,p_e_ole2)*conv   &
-                                   +emis_ant(i,k,j,p_e_aro1)*conv   &
-                                   +emis_ant(i,k,j,p_e_aro2)*conv   &
-                                   +emis_ant(i,k,j,p_e_hcho)*conv   &
-                                   +emis_ant(i,k,j,p_e_ccho)*conv   &
-                                   +emis_ant(i,k,j,p_e_rcho)*conv   &
-                                   +emis_ant(i,k,j,p_e_acet)*conv   &
-                                   +emis_ant(i,k,j,p_e_mek)*conv    &
-                                   +emis_ant(i,k,j,p_e_isoprene)*conv &
-                                   +emis_ant(i,k,j,p_e_terp)*conv     &
-                                   +emis_ant(i,k,j,p_e_phen)*conv     &
-                                   +emis_ant(i,k,j,p_e_cres)*conv     &
-                                   +emis_ant(i,k,j,p_e_meoh)*conv     &
-                                   +emis_ant(i,k,j,p_e_gly)*conv      &
-                                   +emis_ant(i,k,j,p_e_mgly)*conv    &
-                                   +emis_ant(i,k,j,p_e_bacl)*conv     &
-                                   +emis_ant(i,k,j,p_e_isoprod)*conv  &
-                                   +emis_ant(i,k,j,p_e_methacro)*conv &
-                                   +emis_ant(i,k,j,p_e_mvk)*conv      &
-                                   +emis_ant(i,k,j,p_e_prod2)*conv    &
-                                   +emis_ant(i,k,j,p_e_bald)*conv     &
-                                   +emis_ant(i,k,j,p_e_etoh)*conv     &
-                                   +emis_ant(i,k,j,p_e_hcooh)*conv) *0.20 !20% of NMOC emissions assumed to be IVOCs
+         !!QZR++: 11/2024 RACM2B_VCP3 UPDATES IVOCs emis_ant added NEW
+         chem(i,k,j,p_pcg7_f_c)  =  chem(i,k,j,p_pcg7_f_c) + &  
+                                    (emis_ant(i,k,j,p_e_ivocp3_alk)+  &
+                                    emis_ant(i,k,j,p_e_ivocp4_alk)+  &
+                                    emis_ant(i,k,j,p_e_ivocp5_alk)+  &
+                                    emis_ant(i,k,j,p_e_ivocp5_aro)+  &
+                                    emis_ant(i,k,j,p_e_ivocp6_alk)+  &
+                                    emis_ant(i,k,j,p_e_ivocp6_aro))*conv
+
+
+         !QZR++, if racm2b_vcp to SSM Anth mapping for IVOC assumed as 20% of NMVOCs
+         !!chem(i,k,j,p_pcg7_f_c)  =  & 
+         !!chem(i,k,j,p_pcg7_f_c)  + (emis_ant(i,k,j,p_e_eth)*conv  & !p_e_c2h6)*conv  &
+         !!                          +  emis_ant(i,k,j,p_e_c3h8)*conv  & 
+         !!                          +emis_ant(i,k,j,p_e_ace)*conv  & !p_e_c2h2)*conv  &
+         !!                          +emis_ant(i,k,j,p_e_hc3)*conv  &  !p_e_alk3)*conv  &
+         !!                          +emis_ant(i,k,j,p_e_hc5)*conv  &  !p_e_alk4)*conv  &
+         !!                          +emis_ant(i,k,j,p_e_hc8)*conv  &  !p_e_alk5)*conv  &
+         !!                          +emis_ant(i,k,j,p_e_ol2)*conv  & !p_e_ethene)*conv &
+         !!                          +emis_ant(i,k,j,p_e_c3h6)*conv   & 
+         !!                          +emis_ant(i,k,j,p_e_olt)*conv & !p_e_ole1)*conv   &
+         !!                          +(emis_ant(i,k,j,p_e_dien)+  &
+         !!                           emis_ant(i,k,j,p_e_oli))*conv  & !emis_ant(i,k,j,p_e_ole2)*conv   &
+         !!                          +emis_ant(i,k,j,p_e_ben)*conv  &  !p_e_aro1)*conv   &
+         !!                          +(emis_ant(i,k,j,p_e_tol)+  &
+         !!                            emis_ant(i,k,j,p_e_xyl)+      &
+         !!                            emis_ant(i,k,j,p_e_xyo))*conv & !emis_ant(i,k,j,p_e_aro2)*conv   &
+         !!                          +emis_ant(i,k,j,p_e_hcho)*conv   &
+         !!                          +emis_ant(i,k,j,p_e_acd)*conv  & !p_e_ccho)*conv   &
+         !!                          +(emis_ant(i,k,j,p_e_ald)+  &
+         !!                           emis_ant(i,k,j,p_e_cald)+      &
+         !!                           emis_ant(i,k,j,p_e_oald)+      &
+         !!                           emis_ant(i,k,j,p_e_nald))*conv & !emis_ant(i,k,j,p_e_rcho)*conv   &
+         !!                          +emis_ant(i,k,j,p_e_act)*conv   & !p_e_acet)*conv   &
+         !!                          +emis_ant(i,k,j,p_e_mek)*conv    &
+         !!                          +emis_ant(i,k,j,p_e_iso)*conv   & !p_e_isoprene)*conv &
+         !!                          +emis_ant(i,k,j,p_e_terp)*conv     &
+         !!                          +emis_ant(i,k,j,p_e_phen)*conv     &
+         !!                          +(emis_ant(i,k,j,p_e_csl)+      &
+         !!                            emis_ant(i,k,j,p_e_mct))*conv & !emis_ant(i,k,j,p_e_cres)*conv     &
+         !!                          +emis_ant(i,k,j,p_e_moh)*conv   & !p_e_meoh)*conv     &
+         !!                         +emis_ant(i,k,j,p_e_gly)*conv      &
+         !!                          +emis_ant(i,k,j,p_e_mgly)*conv    &
+         !!                          +emis_ant(i,k,j,p_e_bacl)*conv     &
+         !!                          +emis_ant(i,k,j,p_e_isoprod)*conv  & 
+         !!                          +(emis_ant(i,k,j,p_e_macr)+     &
+         !!                           emis_ant(i,k,j,p_e_cuald))*conv & !+emis_ant(i,k,j,p_e_methacro)*conv &
+         !!                          +emis_ant(i,k,j,p_e_mvk)*conv      &
+         !!                          +emis_ant(i,k,j,p_e_ket)*conv   & !+emis_ant(i,k,j,p_e_prod2)*conv    &
+         !!                          +emis_ant(i,k,j,p_e_bald)*conv     &
+         !!                          +emis_ant(i,k,j,p_e_eoh)*conv    & !p_e_etoh)*conv     &
+         !!                          +emis_ant(i,k,j,p_e_ora1)*conv)*0.20 !emis_ant(i,k,j,p_e_hcooh)*conv)  
+         !20% of NMOC emissions assumed to be IVOCs (Jathar et al. Original assumption)
+         !chem(i,k,j,p_pcg7_f_c)  =  & 
+         !chem(i,k,j,p_pcg7_f_c)  + (emis_ant(i,k,j,p_e_c2h6)*conv  &
+         !                        +  emis_ant(i,k,j,p_e_c3h8)*conv  &
+         !                          +emis_ant(i,k,j,p_e_c2h2)*conv  &
+         !                          +emis_ant(i,k,j,p_e_alk3)*conv  &
+         !                          +emis_ant(i,k,j,p_e_alk4)*conv  &
+         !                          +emis_ant(i,k,j,p_e_alk5)*conv  &
+         !                          +emis_ant(i,k,j,p_e_ethene)*conv &
+         !                          +emis_ant(i,k,j,p_e_c3h6)*conv   &
+         !                          +emis_ant(i,k,j,p_e_ole1)*conv   &
+         !                          +emis_ant(i,k,j,p_e_ole2)*conv   &
+         !                          +emis_ant(i,k,j,p_e_aro1)*conv   &
+         !                          +emis_ant(i,k,j,p_e_aro2)*conv   &
+         !                          +emis_ant(i,k,j,p_e_hcho)*conv   &
+         !                          +emis_ant(i,k,j,p_e_ccho)*conv   &
+         !                          +emis_ant(i,k,j,p_e_rcho)*conv   &
+         !                          +emis_ant(i,k,j,p_e_acet)*conv   &
+         !                          +emis_ant(i,k,j,p_e_mek)*conv    &
+         !                          +emis_ant(i,k,j,p_e_isoprene)*conv &
+         !                          +emis_ant(i,k,j,p_e_terp)*conv     &
+         !                          +emis_ant(i,k,j,p_e_phen)*conv     &
+         !                          +emis_ant(i,k,j,p_e_cres)*conv     &
+         !                          +emis_ant(i,k,j,p_e_meoh)*conv     &
+         !                          +emis_ant(i,k,j,p_e_gly)*conv      &
+         !                          +emis_ant(i,k,j,p_e_mgly)*conv    &
+         !                          +emis_ant(i,k,j,p_e_bacl)*conv     &
+         !                          +emis_ant(i,k,j,p_e_isoprod)*conv  &
+         !                          +emis_ant(i,k,j,p_e_methacro)*conv &
+         !                          +emis_ant(i,k,j,p_e_mvk)*conv      &
+         !                          +emis_ant(i,k,j,p_e_prod2)*conv    &
+         !                          +emis_ant(i,k,j,p_e_bald)*conv     &
+         !                          +emis_ant(i,k,j,p_e_etoh)*conv     &
+         !                          +emis_ant(i,k,j,p_e_hcooh)*conv) *0.20 !20% of NMOC emissions assumed to be IVOCs
 
              end do
           end do
@@ -1696,6 +1846,8 @@ CONTAINS
             ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,               &
             ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,       &
             ebio_sesq,ebio_mbo,                                         &
+            ebio_moh,ebio_eoh,ebio_act,                                 &
+            ebio_acd,ebio_ora1,ebio_eclp,                               &
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )
@@ -1724,6 +1876,8 @@ CONTAINS
             ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,               &
             ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,       &
             ebio_sesq,ebio_mbo,                                         & 
+            ebio_moh,ebio_eoh,ebio_act,                                 &
+            ebio_acd,ebio_ora1,ebio_eclp,                               &
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )

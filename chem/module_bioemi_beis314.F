@@ -25,6 +25,7 @@ MODULE module_bioemi_beis314
 !  The following 16 RACM compounds have biogenic emissions:
 !  iso, no, oli, api, lim, xyl, hc3, ete, olt, ket, ald, hcho, eth, ora2, co, nr
 !23456789 123456789 123456789 123456789 123456789 123456789 123456789 12
+! QZR++ (CIRES/NOAA), RACM2bVCP biogenics added in beis subroutine 2025; for mapping to SSM
 
     CONTAINS
       SUBROUTINE bio_emissions_beis314(id,config_flags,ktau,curr_secs, &
@@ -33,11 +34,15 @@ MODULE module_bioemi_beis314
                sebio_hc3,sebio_ete,sebio_olt,sebio_ket,sebio_ald,      &
                sebio_hcho,sebio_eth,sebio_ora2,sebio_co,sebio_nr,      &
                sebio_sesq,sebio_mbo,                                   & 
+               sebio_moh,sebio_eoh,sebio_act,                          & !QZR++ moh, eoh, act, acd, ora, eclp added
+               sebio_acd,sebio_ora1,sebio_eclp,                        &
                noag_grow,noag_nongrow,nononag,slai,                    &
                ebio_iso,ebio_oli,ebio_api,ebio_lim,ebio_xyl,           &
                ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,           &
                ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,   &
                ebio_sesq,ebio_mbo,                                     & ! sesq and mbo are added
+               ebio_moh,ebio_eoh,ebio_act,                             &
+               ebio_acd,ebio_ora1,ebio_eclp,                           &
                ids,ide, jds,jde, kds,kde,                              &
                ims,ime, jms,jme, kms,kme,                              &
                its,ite, jts,jte, kts,kte                               )
@@ -81,6 +86,8 @@ MODULE module_bioemi_beis314
                sebio_hc3,sebio_ete,sebio_olt,sebio_ket,sebio_ald,      &
                sebio_hcho,sebio_eth,sebio_ora2,sebio_co,sebio_nr,      &
                sebio_sesq,sebio_mbo,                                   &
+               sebio_moh,sebio_eoh,sebio_act,                          &
+               sebio_acd,sebio_ora1,sebio_eclp,                        & !QZR++ RACM2bvcp mappig to SSM , BEIS3.14
                noag_grow,noag_nongrow,nononag
 
 ! Leaf area index for isoprene
@@ -93,7 +100,9 @@ MODULE module_bioemi_beis314
                ebio_iso,ebio_oli,ebio_api,ebio_lim,ebio_xyl,           &
                ebio_hc3,ebio_ete,ebio_olt,ebio_ket,ebio_ald,           &
                ebio_hcho,ebio_eth,ebio_ora2,ebio_co,ebio_nr,ebio_no,   &
-               ebio_sesq,ebio_mbo   
+               ebio_sesq,ebio_mbo,                                     &
+               ebio_moh,ebio_eoh,ebio_act,                             &
+               ebio_acd,ebio_ora1,ebio_eclp       !QZR++ oVCPs from racm2b_vcp for BEIS3.14 SSM MApping   
 
 ! .. Local Scalars .. 
 
@@ -111,6 +120,7 @@ MODULE module_bioemi_beis314
                se_hc3,se_ete,se_olt,se_ket,se_ald,      &
                se_hcho,se_eth,se_ora2,se_co,se_nr,      &
                se_mbo,se_sesq,                          & 
+               se_moh,se_eoh,se_act,se_acd,se_ora1,se_eclp, & !QZR++ oVCPs from RACM2b_vcp for BEIS3.14 SSM Mapping
                growagno,ngrowagno,nonagno
 !   leaf area index for isoprene
       REAL  ::  tlai  
@@ -186,6 +196,14 @@ MODULE module_bioemi_beis314
            ! SESQ and MBO are added
            se_sesq  = sebio_sesq(i,j)
            se_mbo  = sebio_mbo(i,j)
+
+           ! Added OVCP, QZR++ for BEIS3.14, RACM2bVCP mapping to SSM
+           se_moh  = sebio_moh(i,j)
+           se_eoh  = sebio_eoh(i,j)
+           se_act  = sebio_act(i,j)
+           se_acd  = sebio_acd(i,j)
+           se_ora1  = sebio_ora1(i,j)
+           se_eclp = sebio_eclp(i,j)
 
            growagno = noag_grow(i,j)
            ngrowagno = noag_nongrow(i,j) 
@@ -288,6 +306,14 @@ MODULE module_bioemi_beis314
            ! SESQ and MBO are added
            ebio_sesq(i,j)  =  se_sesq * cfovoc
            ebio_mbo(i,j)   =  se_mbo * cfovoc
+
+           ! Added OVCP, QZR++ from RACM2b_vcp for BEIS3.14 for mapping to SSM
+           ebio_moh(i,j)  =  se_moh * cfovoc
+           ebio_eoh(i,j)  =  se_eoh * cfovoc
+           ebio_act(i,j)  =  se_act * cfovoc
+           ebio_acd(i,j)  =  se_acd * cfovoc
+           ebio_ora1(i,j)  =  se_ora1 * cfovoc
+           ebio_eclp(i,j) = se_eclp * cfovoc
 
 !... NO emissions
 
