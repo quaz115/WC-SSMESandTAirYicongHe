@@ -78,6 +78,17 @@ state    real  e_ald          i+jf     emis_ant     1         Z      i5r    "E_A
 state    real  e_ket          i+jf     emis_ant     1         Z      i5r    "E_KET"               "EMISSIONS"          "mol km^-2 hr^-1"
 state    real  e_ora2         i+jf     emis_ant     1         Z      i5r    "E_ORA2"              "EMISSIONS"          "mol km^-2 hr^-1"
 state    real  e_nh3          i+jf     emis_ant     1         Z      i5r    "E_NH3"               "EMISSIONS"          "mol km^-2 hr^-1"
+# Additional r2smh (RACM) anth for mapping to SSM anth in emissions_driver qzr++
+state    real  e_moh          i+jf     emis_ant     1         Z      i5rh   "E_MOH"               "EMISSIONS"          "mol km^-2 hr^-1"
+state    real  e_eoh          i+jf     emis_ant     1         Z      i5rh   "E_EOH"               "EMISSIONS"          "mol km^-2 hr^-1"
+state    real  e_act          i+jf     emis_ant     1         Z      i5rh   "E_ACT"               "EMISSIONS"          "mol km^-2 hr^-1"
+state    real  e_acd          i+jf     emis_ant     1         Z      i5rh   "E_ACD"               "EMISSIONS"          "mol km^-2 hr^-1"
+state    real  e_ace          i+jf     emis_ant     1         Z      i5rh   "E_ACE"               "EMISSIONS"          "mol km^-2 hr^-1"
+state    real  e_mct          i+jf     emis_ant     1         Z      i5rh   "E_MCT"               "EMISSIONS"          "mol km^-2 hr^-1"
+state    real  e_ben          i+jf     emis_ant     1         Z      i5rh   "E_BEN"               "EMISSIONS"          "mol km^-2 hr^-1"
+state    real  e_xyo          i+jf     emis_ant     1         Z      i5rh   "E_XYO"               "EMISSIONS"          "mol km^-2 hr^-1"
+state    real  e_dien         i+jf     emis_ant     1         Z      i5rh   "E_DIEN"              "EMISSIONS"          "mol km^-2 hr^-1"
+#End R2SMH qzr++
 state    real  e_pm_25        i+jf     emis_ant     1         Z      i5r    "E_PM_25"             "EMISSIONS"          "ug/m3 m/s"
 state    real  e_pm_10        i+jf     emis_ant     1         Z      i5r    "E_PM_10"             "EMISSIONS"          "ug/m3 m/s"
 state    real  e_pm25i        i+jf     emis_ant     1         Z      i5r    "E_PM25I"             "EMISSION RATE OF UNIDEN. PM2.5 MASS"  "ug/m3 m/s"
@@ -103,8 +114,10 @@ state    real  e_bigalk       i+jf     emis_ant     1         Z      i5     "E_B
 state    real  e_bigene       i+jf     emis_ant     1         Z      i5     "E_BIGENE"     "EMISSIONS BIGENE"            "mol km^-2 hr^-1"
 state    real  e_c2h4         i+jf     emis_ant     1         Z      i5     "E_C2H4"       "EMISSIONS C2H4"              "mol km^-2 hr^-1"
 state    real  e_c2h6         i+jf     emis_ant     1         Z      i5      "E_C2H6"       "EMISSIONS C2H6"              "mol km^-2 hr^-1"
-state    real  e_c3h6         i+jf     emis_ant     1         Z      i5      "E_C3H6"       "EMISSIONS C3H6"              "mol km^-2 hr^-1"
-state    real  e_c3h8         i+jf     emis_ant     1         Z      i5      "E_C3H8"       "EMISSIONS C3H8"              "mol km^-2 hr^-1"
+##QZR++ changed 'i5' to 'i5r' for consistensy (wrfchemi RACM2b_vcp mapping to SSM: c3h6 and c3h8 mapped seprately now)
+state    real  e_c3h6         i+jf     emis_ant     1         Z      i5r      "E_C3H6"       "EMISSIONS C3H6"              "mol km^-2 hr^-1"
+state    real  e_c3h8         i+jf     emis_ant     1         Z      i5r      "E_C3H8"       "EMISSIONS C3H8"              "mol km^-2 hr^-1"
+##QZR++ change end
 state    real  e_ch2o         i+jf     emis_ant     1         Z      i5     "E_CH2O"       "EMISSIONS CH2O"              "mol km^-2 hr^-1"
 state    real  e_ch3cho       i+jf     emis_ant     1         Z      i5     "E_CH3CHO"     "EMISSIONS CH3CHO"            "mol km^-2 hr^-1"
 state    real  e_ch3coch3     i+jf     emis_ant     1         Z      i5     "E_CH3COCH3"   "EMISSIONS CH3COCH3"          "mol km^-2 hr^-1"
@@ -256,6 +269,7 @@ state   real    e_meoh          i+jf    emis_ant        1       Z       i5r     
 state   real    e_gly           i+jf    emis_ant        1       Z       i5r      "E_GLY" "GLY emissions" "mol km^-2 hr^-1"
 state   real    e_mgly          i+jf    emis_ant        1       Z       i5r      "E_MGLY"        "MGLY emissions"        "mol km^-2 hr^-1"
 state   real    e_bacl          i+jf    emis_ant        1       Z       i5r      "E_BACL"        "BACL emissions"        "mol km^-2 hr^-1"
+##QZR++ rcm2b_vcp to SSM Anth mapping isoprod and cco_oh separately mapped now
 state   real    e_isoprod       i+jf    emis_ant        1       Z       i5r      "E_ISOPROD"     "ISOPROD emissions"     "mol km^-2 hr^-1"
 state   real    e_methacro      i+jf    emis_ant        1       Z       i5r      "E_METHACRO"    "METHACRO emissions"    "mol km^-2 hr^-1"
 state   real    e_mvk           i+jf    emis_ant        1       Z       i5r      "E_MVK" "MVK emissions" "mol km^-2 hr^-1"
@@ -265,6 +279,38 @@ state   real    e_bald          i+jf    emis_ant        1       Z       i5r     
 state   real    e_hcooh         i+jf    emis_ant        1       Z       i5r      "E_HCOOH"       "HCOOH emissions"       "mol km^-2 hr^-1"
 state   real    e_cco_oh        i+jf    emis_ant        1       Z       i5r      "E_CCO_OH"      "CCO_OH emissions"      "mol km^-2 hr^-1"
 state   real    e_rco_oh        i+jf    emis_ant        1       Z       i5r      "E_RCO_OH"      "RCO_OH emissions"      "mol km^-2 hr^-1"
+
+#r2smh emissions (RACM emiss anth mapped to SSM anth in emissions_driver) qzr++
+#state   real    e_d4silx          i+jf    emis_ant        1       Z       i5r      "E_D4SILX"        "D4 Siloxane emissions"        "mol km^-2 hr^-1"
+#state   real    e_d5silx          i+jf    emis_ant        1       Z       i5r      "E_D5SILX"        "D5 Siloxane  emissions"        "mol km^-2 hr^-1"
+#state   real    e_pcbtf           i+jf    emis_ant        1       Z       i5r      "E_PCBTF"        "PCBTF emissions"        "mol km^-2 hr^-1"
+#state   real    e_pdcbz           i+jf    emis_ant        1       Z       i5r      "E_PDCBZ"        "PDCBZ  emissions"        "mol km^-2 hr^-1"
+state   real    e_nald            i+jf    emis_ant        1       Z       i5r      "E_NALD"        "Nonanal  emissions"        "mol km^-2 hr^-1"
+state   real    e_oald            i+jf    emis_ant        1       Z       i5r      "E_OALD"        "Octanal  emissions"        "mol km^-2 hr^-1"
+state   real    e_cald            i+jf    emis_ant        1       Z       i5r      "E_CALD"        "Cooking aldehydes  emissions"        "mol km^-2 hr^-1"
+state   real    e_cuald            i+jf    emis_ant        1       Z       i5r      "E_CUALD"        "Cooking unsaturated aldehydes  emissions"        "mol km^-2 hr^-1"
+#state   real    e_ucm          i+jf    emis_ant        1       Z       i5r      "E_UCM"        "UCM emissions"        "mol km^-2 hr^-1"
+state   real    e_ora1           i+jf    emis_ant        1       Z       i5r      "E_ORA1"        "ORA1 emissions"        "mol km^-2 hr^-1"
+
+# RACM2B_VCP3 new wrfchemi Emissions Nov 2024 qzr++
+state   real    e_api            i+jf    emis_ant        1       Z       i5rh      "E_API"        "API emissions"		 "mol km^-2 hr^-1"
+state   real    e_bcarb          i+jf    emis_ant        1       Z       i5rh      "E_BCARB"      "BCARB emissions"		"mol km^-2 hr^-1"
+state   real    e_benzoh         i+jf    emis_ant        1       Z       i5rh      "E_BENZOH"     "Benzohydrox emissions"		"mol km^-2 hr^-1"
+state   real    e_carb           i+jf    emis_ant        1       Z       i5rh      "E_CARB"       "CARB emissions"		"mol km^-2 hr^-1"
+state   real    e_dcb1           i+jf    emis_ant        1       Z       i5rh      "E_DCB1"       "DCB1 emissions"              "mol km^-2 hr^-1"
+state   real    e_dpgmea         i+jf    emis_ant        1       Z       i5rh      "E_DPGMEA"     "DPGMEA emissions"		"mol km^-2 hr^-1"
+state   real    e_euc            i+jf    emis_ant        1       Z       i5rh      "E_EUC"        "EUC emissions"		"mol km^-2 hr^-1"
+state   real    e_ffco2          i+jf    emis_ant        1       Z       i5rh      "E_FFCO2"      "FFCO2 emissions"		"mol km^-2 hr^-1"
+#qzr++ IVOCs NEW emissions RACM2B_VCP to map to SSM (from anth wrfchemi)
+state   real    e_ivocp3_alk     i+jf    emis_ant        1       Z       i5rh      "E_IVOCP3-ALK" "IVOCP3-ALK emissions"		"mol km^-2 hr^-1"
+state   real    e_ivocp4_alk     i+jf    emis_ant        1       Z       i5rh      "E_IVOCP4-ALK" "IVOCP4-ALK emissions"                 "mol km^-2 hr^-1"
+state   real    e_ivocp5_alk     i+jf    emis_ant        1       Z       i5rh      "E_IVOCP5-ALK" "IVOCP5-ALK emissions"                 "mol km^-2 hr^-1"
+state   real    e_ivocp5_aro     i+jf    emis_ant        1       Z       i5rh      "E_IVOCP5-ARO" "IVOCP5-ARO emissions"                 "mol km^-2 hr^-1"
+state   real    e_ivocp6_alk     i+jf    emis_ant        1       Z       i5rh      "E_IVOCP6-ALK" "IVOCP6-ALK emissions"                 "mol km^-2 hr^-1"
+state   real    e_ivocp6_aro     i+jf    emis_ant        1       Z       i5rh      "E_IVOCP6-ARO" "IVOCP6-ARO emissions"                 "mol km^-2 hr^-1"
+state   real    e_lim            i+jf    emis_ant        1       Z       i5rh      "E_LIM"        "LIM emissions"		"mol km^-2 hr^-1"
+state   real    e_roh            i+jf    emis_ant        1       Z       i5rh      "E_ROH"        "ROH emissions"               "mol km^-2 hr^-1"
+##qzr++ changes end
 
 # GHG anthropogenic emissions
 state   real    e_co2tst        i+jf    emis_ant        1       Z       i5       "E_CO2TST"      "Anthropogenic CO2 test fluxes"     "mol km^-2 hr^-1"
@@ -301,7 +347,7 @@ state    real  e_hgp          i+jf     emis_ant     1         Z      i5     "E_H
 
 state    real  e_apin         i+jf     emis_ant     1         Z      i5     "E_APIN"               "EMISSIONS a-Pinene"            "mol km^-2 hr^-1"
 state    real  e_bpin         i+jf     emis_ant     1         Z      i5     "E_BPIN"               "EMISSIONS b-Pinene"            "mol km^-2 hr^-1"
-state    real  e_lim          i+jf     emis_ant     1         Z      i5     "E_LIM"                "EMISSIONS Limonene"            "mol km^-2 hr^-1"
+#QZR++ Commented as e_lim added ABOVE: state    real  e_lim          i+jf     emis_ant     1         Z      i5     "E_LIM"                "EMISSIONS Limonene"            "mol km^-2 hr^-1"
 state    real  e_ter          i+jf     emis_ant     1         Z      i5     "E_TER"                "EMISSIONS Terpinene"           "mol km^-2 hr^-1"
 state    real  e_oci          i+jf     emis_ant     1         Z      i5     "E_OCI"                "EMISSIONS Ocimene"             "mol km^-2 hr^-1"
 state    real  e_hum          i+jf     emis_ant     1         Z      i5     "E_HUM"                "EMISSIONS Humulene"            "mol km^-2 hr^-1"
@@ -705,6 +751,22 @@ state    real  sebio_sesq     ij      misc        1         -      i06r     "seb
 state    real  ebio_sesq      ij      misc        1         -      r        "ebio_sesq"        "Actual biog emiss"  "mol km^-2 hr^-1"
 state    real  sebio_mbo      ij      misc        1         -      i06r     "sebio_mbo"        "Reference biog emiss"  "mol km^-2 hr^-1"
 state    real  ebio_mbo       ij      misc        1         -      r        "ebio_mbo"         "Actual biog emiss"  "mol km^-2 hr^-1"
+
+# OVCPs from RACM2B_VCP qzr++ for beis CA12km
+state    real  sebio_moh      ij      misc        1         -      i06r     "sebio_moh"       "Reference biog emiss"  "mol km^-2 hr^-1"
+state    real  ebio_moh       ij      misc        1         -      rh        "ebio_moh"        "Actual biog emiss"  "mol km^-2 hr^-1"
+state    real  sebio_eoh      ij      misc        1         -      i06r     "sebio_eoh"       "Reference biog emiss"  "mol km^-2 hr^-1"
+state    real  ebio_eoh       ij      misc        1         -      rh        "ebio_eoh"        "Actual biog emiss"  "mol km^-2 hr^-1"
+state    real  sebio_act      ij      misc        1         -      i06r     "sebio_act"       "Reference biog emiss"  "mol km^-2 hr^-1"
+state    real  ebio_act       ij      misc        1         -      rh        "ebio_act"        "Actual biog emiss"  "mol km^-2 hr^-1"
+#R2SMH from RACM2B_VCP qzr++ for beis CA12km
+state    real  sebio_acd      ij      misc        1         -      i06r     "sebio_acd"       "Reference biog emiss"  "mol km^-2 hr^-1"
+state    real  ebio_acd       ij      misc        1         -      rh        "ebio_acd"        "Actual biog emiss"  "mol km^-2 hr^-1"
+state    real  sebio_ora1     ij      misc        1         -      i06r     "sebio_ora1"      "Reference biog emiss"  "mol km^-2 hr^-1"
+state    real  ebio_ora1      ij      misc        1         -      rh        "ebio_ora1"       "Actual biog emiss"  "mol km^-2 hr^-1"
+state    real  sebio_eclp      ij      misc        1         -      i06r     "sebio_eclp"        "Reference biog emiss"  "mol km^-2 hr^-1"
+state    real  ebio_eclp       ij      misc        1         -      rh        "ebio_eclp"         "Actual biog emiss"  "mol km^-2 hr^-1"
+##QZR++ changes end
 
 # Output of selected biogenic emissions from model MEGAN v2
 state    real  mebio_isop     ij      misc        1         -      -        "MEBIO_ISOP"       "MEGAN2 isoprene emiss" "mol km^-2 hr^-1"
@@ -7251,7 +7313,7 @@ package   cri_mosaic_4bin_aq_kpp  chem_opt==611          -             chem:dms,
 #emission package definitions
 #
 package   eradm           emiss_opt==2                   -             emis_ant:e_iso,e_so2,e_no,e_co,e_eth,e_hc3,e_hc5,e_hc8,e_xyl,e_ol2,e_olt,e_oli,e_tol,e_csl,e_hcho,e_ald,e_ket,e_ora2,e_nh3
-package   eradmsorg       emiss_opt==3                   -             emis_ant:e_iso,e_so2,e_no,e_no2,e_co,e_ch4,e_eth,e_hc3,e_hc5,e_hc8,e_xyl,e_ol2,e_olt,e_oli,e_tol,e_csl,e_hcho,e_ald,e_ket,e_ora2,e_nh3,e_pm25i,e_pm25j,e_pm_10,e_eci,e_ecj,e_orgi,e_orgj,e_so4i,e_so4j,e_no3i,e_no3j,e_naaj,e_naai,e_orgi_a,e_orgj_a,e_orgi_bb,e_orgj_bb,e_hcl,e_cli,e_clj,e_ch3cl
+package   eradmsorg       emiss_opt==3                   -             emis_ant:e_iso,e_so2,e_no,e_no2,e_co,e_ch4,e_eth,e_hc3,e_hc5,e_hc8,e_xyl,e_ol2,e_olt,e_oli,e_tol,e_csl,e_hcho,e_ald,e_ket,e_ora2,e_nh3,e_moh,e_eoh,e_act,e_acd,e_ace,e_mct,e_ben,e_xyo,e_dien,e_pm25i,e_pm25j,e_pm_10,e_eci,e_ecj,e_orgi,e_orgj,e_so4i,e_so4j,e_c3h6,e_c3h8,e_isoprod,e_cco_oh,e_nald,e_oald,e_cald,e_cuald,e_ora1,e_api,e_bcarb,e_benzoh,e_carb,e_dcb1,e_dpgmea,e_euc,e_ffco2,e_ivocp3_alk,e_ivocp4_alk,e_ivocp5_alk,e_ivocp5_aro,e_ivocp6_alk,e_ivocp6_aro,e_lim,e_roh,e_no3i,e_no3j,e_naaj,e_naai,e_orgi_a,e_orgj_a,e_orgi_bb,e_orgj_bb,e_hcl,e_cli,e_clj,e_ch3cl
 package   ecbmz_mosaic    emiss_opt==4                   -             emis_ant:e_iso,e_so2,e_no,e_co,e_eth,e_hc3,e_hc5,e_hc8,e_xyl,e_ol2,e_olt,e_oli,e_tol,e_csl,e_hcho,e_ald,e_ket,e_ora2,e_nh3,e_no2,e_ch3oh,e_c2h5oh,e_pm25i,e_pm25j,e_eci,e_ecj,e_orgi,e_orgj,e_so4i,e_so4j,e_no3i,e_no3j,e_so4c,e_no3c,e_orgc,e_ecc
 package   ecptec          emiss_opt==5                   -             emis_ant:e_iso,e_so2,e_no,e_no2,e_co,e_eth,e_hc3,e_hc5,e_hc8,e_xyl,e_ol2,e_olt,e_oli,e_tol,e_csl,e_hcho,e_ald,e_ket,e_ora2,e_nh3,e_pm_25,e_pm_10,e_oc,e_sulf,e_bc
 package   gocart_ecptec   emiss_opt==6                   -             emis_ant:e_so2,e_sulf,e_bc,e_oc,e_pm_25,e_pm_10
