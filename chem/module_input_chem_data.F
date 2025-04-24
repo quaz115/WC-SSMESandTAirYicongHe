@@ -165,9 +165,13 @@ MODULE module_input_chem_data
 !     See gasprofile_init_pnnl for an explination of what height
 !     each index represents.
       DATA (xl(1,k_loop),k_loop=1,kx) &
-      / 1.68E-07, 1.68E-07, 5.79E-08, 5.24E-08, 5.26E-08, &
-       5.16E-08, 4.83E-08, 4.50E-08, 4.16E-08, 3.80E-08, 3.56E-08, &
-       3.35E-08, 3.15E-08, 3.08E-08, 3.06E-08, 3.00E-08/
+      !/ 1.68E-07, 1.68E-07, 5.79E-08, 5.24E-08, 5.26E-08, &
+      ! 5.16E-08, 4.83E-08, 4.50E-08, 4.16E-08, 3.80E-08, 3.56E-08, &
+      ! 3.35E-08, 3.15E-08, 3.08E-08, 3.06E-08, 3.00E-08/
+      !! QZR++, Zhu et al. ACP 2024 Qindan o3 updates, ATOM1 measurements -158 longitude, 40-45 latitude
+      / 1.68E-07, 1.68E-07, 8.00E-08, 7.11E-08, 5.10E-08, &
+         5.10E-08, 4.29E-08, 3.48E-08, 3.10E-08, 2.92E-08, 2.77E-08, &
+         2.64E-08, 2.55E-08, 2.49E-08, 2.44E-08, 2.44E-08/
 
       DATA (xl(2,k_loop),k_loop=1,kx) &
       / 4.06E-10, 4.06E-10, 2.16E-10, 1.37E-10, 9.47E-11, &
@@ -1733,7 +1737,47 @@ END SUBROUTINE bdy_chem_value_ghg
               i_bdy_method = 501
           end if
       end if
-      if (have_bcs_chem) i_bdy_method =6
+      !if (have_bcs_chem) i_bdy_method =6  !qzrasool 4/28/2024: commented to add following hard-coding for WACCM ic
+       !***Based on jianhe raqms ic hard coding block in RACM setup: 
+       !***See jhe hard-coding for RACM_SOA_VBS_KPP only and 12km CONUS domain, 
+       !***used global bdy from RAQMS, which includes a few species in RACM
+       !***if ((have_bcs_chem) .and. (config_flags%chem_opt == R2SMH_KPP) .and. (DX >= 12000.)) then 
+       if ((have_bcs_chem) .and. (config_flags%chem_opt == SAPRC99_SIMPLESOM_MOSAIC_4BIN_AQ_KPP) .and. (DX >= 12000.)) then 
+               !WACCM ic species excluding o3 (ATOM O3 profile for ic to be used) 
+               ! Orig: (ic == p_no2) .or. (ic == p_o3) .or. (ic == p_ole1) .or. &
+              if ((ic == p_co) .or. (ic == p_acet) .or. (ic == p_alk3) .or. & 
+                      (ic == p_alk4) .or. (ic == p_alk5) .or. (ic == p_aro1) .or. &
+                      (ic == p_aro2) .or. (ic == p_c2h2) .or. (ic == p_c2h6) .or. &
+                      (ic == p_c3h6) .or. (ic == p_c3h8) .or. (ic == p_cco_oh) .or. &
+                      (ic == p_cooh) .or. (ic == p_ch4) .or. (ic == p_ccho) .or. &
+                      (ic == p_cres) .or. (ic == p_ethene) .or. (ic == p_etoh) .or. &
+                      (ic == p_gly) .or. (ic == p_h2o2) .or. (ic == p_n2o5) .or. &
+                      (ic == p_hcho) .or. (ic == p_hcooh) .or. (ic == p_hno3) .or. &
+                      (ic == p_isoprod) .or. (ic == p_isoprene) .or. (ic == p_mek) .or. &
+                      (ic == p_meoh) .or. (ic == p_methacro) .or. (ic == p_mvk) .or. &
+                      (ic == p_mgly) .or. (ic == p_nh3) .or. (ic == p_no) .or. &
+                      (ic == p_no2) .or. (ic == p_ole1) .or. &
+                      (ic == p_ole2) .or. (ic == p_pan) .or. (ic == p_so2) .or. &
+                      (ic == p_terp) .or. (ic == p_oc_a01) .or. (ic == p_oc_a02) .or. &
+                      (ic == p_oc_a03) .or. (ic == p_oc_a04) .or. (ic == p_bc_a01) .or. &
+                      (ic == p_bc_a02) .or. (ic == p_bc_a03) .or. (ic == p_bc_a04) .or. &
+                      (ic == p_so4_a01) .or. (ic == p_so4_a02) .or. (ic == p_so4_a03) .or. &
+                      (ic == p_so4_a04) .or. (ic == p_nh4_a01) .or. (ic == p_nh4_a02) .or. &
+                      (ic == p_nh4_a03) .or. (ic == p_nh4_a04) .or. (ic == p_no3_a01) .or. &
+                      (ic == p_no3_a02) .or. (ic == p_no3_a03) .or. (ic == p_no3_a04) .or. &
+                      (ic == p_na_a04) .or. (ic == p_cl_a01) .or. (ic == p_cl_a02) .or. &
+                      (ic == p_cl_a03) .or. (ic == p_cl_a04) .or. (ic == p_oin_a01) .or. &
+                      (ic == p_oin_a02) .or. (ic == p_oin_a03) .or. (ic == p_oin_a04) .or. &
+                      (ic == p_num_a01) .or. (ic == p_num_a02) .or. (ic == p_num_a03) .or. &
+                      (ic == p_num_a04)) then
+                      i_bdy_method = 6
+                      ! else
+                      !     i_bdy_method = 9  ! missing species are based on idealized profile
+              end if
+       else if (have_bcs_chem) then
+               i_bdy_method = 6
+       end if  !QZR++ changes end
+
       if (ic .lt. param_first_scalar) i_bdy_method = 0
 
 !----------------------------------------------------------------------
