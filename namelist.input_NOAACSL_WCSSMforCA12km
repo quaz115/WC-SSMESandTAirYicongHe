@@ -1,0 +1,405 @@
+ history_interval                    = 60,   60,   60,
+ history_begin_h                     = 00,   00,   00,
+ frames_per_outfile                  = 1,    1,    1,
+
+ interval_seconds                    = 21600,
+ input_from_file                     = .true.,.true.,.true.,             ! whether the nested run will have input files for domains other than 1
+ fine_input_stream                   = 0,    0,    0,                    ! 0- all fields from nest input are used
+                                                                        ! 2- only nest input specified from input stream 2 (defined in the Registry) are used
+ cycling                             = .false.                           ! true for cycling (using wrfout file as input data)
+ restart                             = .false.,
+ restart_interval                    = 14400,
+
+ io_form_input                       = 2, ! CHARLES HE !qzr commented, now uncommented
+ auxinput1_inname                    = "met_em.d<domain>.<date>",
+
+ auxinput4_inname                    = "wrflowinp_d<domain>",            ! SST data input
+ auxinput4_interval                  = 360,  360,
+ io_form_auxinput4                   = 2,
+
+ auxinput5_inname                     = 'wrfchemi_d<domain>_<date>'
+ frames_per_auxinput5                = 12
+ auxinput5_interval_m                = 60, 60,                           ! Anthropogenic emissions input
+ io_form_auxinput5                   = 2,
+
+ auxinput6_inname                    = "wrfbiochemi_d<domain>",          ! Biogenic emissions input BEIS wrfbiochemi input
+ io_form_auxinput6                   = 2,
+
+ auxinput12_inname                   = "wrf_chem_input",                 ! Reading WRF-Chem output from a previous run
+ io_form_auxinput12                  = 2,
+
+ force_use_old_data                   = .true.,
+ debug_level                          = 300, !0,
+/
+
+ &domains
+ time_step                           = 72,
+ time_step_fract_num                 = 0,
+ time_step_fract_den                 = 1,
+
+ max_dom                             = 1,
+
+ s_we                                = 1,
+ e_we                                = 91, !!CA 12 km Test !441, !!CONUS 12km
+ s_sn                                = 1,
+ e_sn                                = 101, !!CA 12 km Test !285, !!CONUS 12km
+
+ num_metgrid_levels                  = 40,                               ! 61- ERA-Interim
+ num_metgrid_soil_levels             = 4,
+
+ p_top_requested                     = 5000,
+ s_vert                              = 1,
+
+ e_vert                              = 51,
+ eta_levels                          = 1.0000, 0.9973, 0.9944, 0.9912, 0.9877,
+                                       0.9838, 0.9794, 0.9745, 0.9690, 0.9629,
+                                       0.9559, 0.9480, 0.9392, 0.9291, 0.9178,
+                                       0.9050, 0.8907, 0.8747, 0.8569, 0.8372,
+                                       0.8155, 0.7919, 0.7662, 0.7386, 0.7093,
+                                       0.6782, 0.6458, 0.6121, 0.5776, 0.5424,
+                                       0.5069, 0.4713, 0.4361, 0.4013, 0.3673,
+                                       0.3342, 0.3022, 0.2714, 0.2420, 0.2140,
+                                       0.1874, 0.1623, 0.1386, 0.1138, 0.0931,
+                                       0.0740, 0.0565, 0.0405, 0.0258, 0.0123,
+                                       0.0000
+
+ 
+ interp_type                         = 2      !qzr ADDED from RACM2BVCP ! (default) vertical interpolation that is linear in log(pressure)
+ extrap_type                         = 2      !qzr ADDED from RACM2BVCP ! (default) vertical extrapolation of non-temperature variables, using the lowest level as constant below ground
+ t_extrap_type                       = 2      !qzr ADDED from RACM2BVCP ! vertical extrapolation for potential temp: (default) -6.5 K/km lapse rate for temperature
+ lagrange_order                      = 2      !qzr ADDED from RACM2BVCP ! (default) quadratic vertical interpolation order
+
+ lowest_lev_from_sfc                 = .false. !qzr ADDED from RACM2BVCP ! (default) use traditional interpolation
+ force_sfc_in_vinterp                = 1       !qzr ADDED from RACM2BVCP ! (default) use the surface level as the lower boundary when interpolating through this many eta levels
+ zap_close_levels                    = 500     !qzr ADDED from RACM2BVCP ! allow surface data to be used if it is close to a constant pressure level
+ sfcp_to_sfcp                        = .false. !qzr ADDED from RACM2BVCP ! optional method to compute model's surface pressure when incoming data only has surface pressure and terrain, but not sealevel pressure (default is .false.)
+ adjust_heights                      = .false. !qzr ADDED from RACM2BVCP
+
+ lowest_lev_from_sfc                 = .false. !qzr ADDED from RACM2BVCP ! (default) use traditional interpolation
+ use_levels_below_ground             = .true.  !qzr ADDED from RACM2BVCP ! in vertical interpolation, whether to use levels below input surface level; (default) use input isobaric levels below input surface
+ use_surface                         = .true.  !qzr ADDED from RACM2BVCP ! (default) uses input surface level
+ 
+
+ dx                                  = 12000,
+ dy                                  = 12000,
+
+ !nproc_x                             = 26 ! number of processors in x for decomposition
+ !nproc_y                             = 25 ! number of processors in y for decomposition -1: code will do automatic decomposition >1: for both: will be used for decomposition
+
+ grid_id                             = 1,
+ parent_id                           = 0,
+ i_parent_start                      = 1,
+ j_parent_start                      = 1,
+ parent_grid_ratio                   = 1,
+ parent_time_step_ratio              = 1,
+
+ feedback                            = 0,
+ smooth_option                       = 0,   !qzr added , from RACM
+ smooth_cg_topo                      = .true.,     !qzr ADDED from RACM ! smooth topography on the outer rows and columns in domain 1
+ num_traj                            = 0,        !qzr ADDED from RACM
+ /
+
+ &fdda
+ grid_fdda                  = 1        ! grid-nudging fdda on (=0 off) for each domain
+ gfdda_inname               = "wrffdda_d<domain>" ! defined name in real
+ gfdda_interval_m           = 360      ! time interval (in min) between analysis times (must use minutes)
+ gfdda_end_h                = 1000    ! time (in hours) to stop nudging after start of forecast
+ io_form_gfdda              = 2        ! analysis data io format (2 = netCDF)
+ fgdt                       = 0        ! calculation frequency (minutes) for grid-nudging (0=every step)
+ if_no_pbl_nudging_uv       = 0        ! 1= no nudging of u and v in the pbl, 0=nudging in the pbl
+ if_no_pbl_nudging_t        = 1        ! 1= no nudging of temp in the pbl, 0=nudging in the pbl
+ if_no_pbl_nudging_q        = 1        ! 1= no nudging of qvapor in the pbl, 0=nudging in the pbl
+ if_zfac_uv                 = 0        ! 0= nudge u and v in all layers, 1= limit nudging to levels above k_zfac_uv
+ k_zfac_uv                  = 10       ! 10=model level below which nudging is switched off for u and v
+ if_zfac_t                  = 0        ! 0= nudge temp in all layers, 1= limit nudging to levels above k_zfac_t
+ k_zfac_t                   = 10       ! 10=model level below which nudging is switched off for temp
+ if_zfac_q                  = 0        ! 0= nudge qvapor in all layers, 1= limit nudging to levels above k_zfac_q
+ k_zfac_q                   = 10       ! 10=model level below which nudging is switched off for qvapor
+ guv                        = 0.0003   ! nudging coefficient for u and v (sec-1)
+ gt                         = 0.0003   ! nudging coefficient for temp (sec-1)
+ gq                         = 0.00001  ! nudging coefficient for qvapor (sec-1)
+ if_ramping                 = 0        ! 0= nudging ends as a step function, 1= ramping nudging down at end of period
+ /
+
+
+
+ &physics
+ !!mp_physics                          = 10,                                ! WRF Single-Moment 5-class scheme: A slightly more sophisticated version of (3) that allows for mixed-phase processes and super-cooled water
+ !!mp_zero_out                         = 0,                                ! for non-zero mp_physics options, this keeps moisture variables above a threshold value .0. An alternative (and better) way to keep moisture variables positive is to use the moist_adv_opt
+
+ !!ra_lw_physics                       = 4,                                ! RRTMG scheme
+ !!ra_sw_physics                       = 4,                                ! RRTMG scheme
+ !!radt                                = 12,
+ !!swint_opt                           = 1,                                ! Interpolation of shortwave radiation based on the updated solar zenith angle between radiation calls
+ !!aer_opt                             = 0,                                ! aerosol input option (RRTMG only); 1-using Tegen climatology; 2 - J. A. Ruiz-Arias method (see other aer* options)
+
+ !!slope_rad                           = 0,                                ! use slope-dependent radiation
+ !!topo_shading                        = 1,                                ! applies neighboring-point shadow effects for ra_sw_physics
+ !!shadlen                             = 25000.,                           ! maximum length of orographic shadow (in meters); use with topo_shading=1
+
+ !!surface_input_source                = 1,                                ! where landuse and soil category data come from 1 (default) WPS/geogrid, but with dominant categories recomputed in real
+ !!sf_surface_physics                  = 2,                                ! Land Surface; Noah Land Surface Model: Unified NCEP/NCAR/AFWA scheme with soil temperature and moisture in four layers, fractional snow cover and frozen soil physics
+ !!sf_urban_physics                    = 0,                                ! Urban canopy model (1): 3-category UCM option with surface effects for roofs, walls, and streets.
+ !!sf_lake_physics                     = 0,                                ! lake model on (default is 0 = off)
+
+ !!sf_surface_mosaic                   = 1,                                ! use mosaic landuse categories
+ !!mosaic_cat                          = 3,                                ! (default) number of mosaic landuse categories in a grid cell
+ !!mosaic_lu                           = 0,                                ! For RUC LSM only
+ !!mosaic_soil                         = 0,                                ! For RUC LSM only
+
+ !!sst_update                          = 1,                                ! option to use time-varying SST, seaice, vegetation fraction, and albedo during a model simulation (set before running real.exe)
+ !!num_soil_layers                     = 4,                                ! number of soil layers in land surface model (set before running real.exe)
+ !!num_land_cat                        = 21,                               ! In future use MODIS with lake category
+ !!usemonalb                           = .true.                            ! When set to .true., it uses monthly albedo fields from geogrid, instead of table values
+ !!rdlai2d                             = .true.                            ! When set to .true., it uses monthly LAI data from geogrid (new in V3.6) and the field will also go to wrflowinp file if sst_update is 1.
+
+ !!sf_sfclay_physics                   = 5,                                ! surface layer option
+ !!bl_pbl_physics                      = 5,                                ! boundary layer option, MYNN 2.5 level TKE
+ !!bl_mynn_tkeadvect                   = .false.,                          ! (default) off; does not advect tke in MYNN scheme (default)
+ !!bl_mynn_tkebudget                   = 0,                                ! 1- adds MYNN tke budget terms to output
+ !!bl_mynn_cloudpdf                    = 2,
+ !!bl_mynn_edmf                        = 1,
+ !!bl_mynn_edmf_mom                    = 1,
+ !!bl_mynn_edmf_tke                    = 0,
+ !!bl_mynn_mixlength                   = 2,
+ !!bl_mynn_mixqt                       = 0,
+
+ !!grav_settling                       = 2,                                ! Fogdes (vegetation and wind speed dependent; Katata et al. 2008) at surface, and Dyunkerke in the atmosphere
+ !!iz0tlnd                             = 1,                                ! Chen-Zhang thermal roughness length over land, which depends on vegetation height
+ !!bldt                                = 0,
+
+ !!cu_physics                          = 3,                                ! Grell-Freitas ensemble scheme
+ !!cudt                                = 0,
+ !!cu_rad_feedback                     = .true.,                           ! sub-grid cloud effect to the optical depth in radiation currently it works only for GF, G3, GD, and KF schemes; also need to set cu_diag = 1 for GF, G3, and GD schemes (default is .false. =off)
+ !!cu_diag                             = 1,                                ! Additional time-averaged diagnostics from cu_physics (use only with cu_physics=3,5,and 93)
+ !!ishallow                            = 0,                                ! shallow convection used with cu_physics=3 or 5 (default is 0 = off)
+ !!prec_acc_dt                         = 60.,                              ! bucket reset time interval between outputs for cumulus or grid-scale precipitation (in minutes)
+
+ !!shcu_physics                        = 0,                                ! independent shallow cumulus option (not tied to deep convection);
+                                                                        ! 2- CAM UW shallow convection, 3- GRIMS scheme
+
+ !!isfflx                              = 1,                                ! heat and moisture fluxes from the surface for real-data cases and when a PBL is used (only works with sf_sfclay_physics=1, 5, 7, or 11) 1 = fluxes are on, 0 = fluxes are off
+ !!ifsnow                              = 1,                                ! snow-cover effects (only works for sf_surface_physics=1)
+ !!icloud                              = 1,                                ! (default) cloud effect to the optical depth in radiation (only works with ra_sw_physics=1,4 and ra_lw_physics=1,4). with cloud effect, and use cloud fraction option 1 (Xu-Randall mehod)
+ !!icloud_bl                           = 1,
+ !!traj_opt                            = 0,
+ !!dm_has_traj                         = .true.,
+
+ !num_land_cat                        = 21,    !24,    !! CURRENT PHYSICS OPT's start BELOW
+
+ mp_physics                          = 10,    !10,10  ! MICROPHYSICS SCHEME
+ !!mp_zero_out                         = 0,      !2,   !qzr Testing COMMENTING (see below), reverting to G-3D options
+ progn                               = 1,     !Only in SSM not in RACM !1,1
+ ra_lw_physics                       = 4,     !4,4    ! LONG-WAVE RADIATION
+ ra_sw_physics                       = 4,     !4,4    ! SHORT-WAVE RADIATION
+ radt                                = 12,    !12,12  !10,10  ! MINUTES BETWEEN RADIATION CALLS
+ swint_opt                           = 1,
+ aer_opt                             = 0,
+
+ slope_rad                           = 0,             ! use slope-dependent radiation
+ topo_shading                        = 1,             ! applies neighboring-point shadow effects for ra_sw_physics
+ shadlen                             = 25000.,
+
+ !cam_abs_freq_s                      = 21600, !These are for ra physics as in SSM AMAZON case (not used with NOAA physics)
+ !levsiz                              = 59,
+ !paerlev                             = 29,
+ !cam_abs_dim1                        = 4,
+ !cam_abs_dim2                        = 67,
+
+ surface_input_source                = 1,
+
+ sf_surface_physics                  = 2,     !2,2    !5,5   ! LAND-SURFACE OPTION
+ sf_urban_physics                    = 0,    !0,0  ! URBAN CANOPY MODEL
+
+ sf_lake_physics                     = 0,    !0,0                                ! lake model on (default is 0 = off)
+ sf_surface_mosaic                   = 1,                                ! use mosaic landuse categories
+ mosaic_cat                          = 3,                                ! (default) number of mosaic landuse categories in a grid cell
+ mosaic_lu                           = 0,                                ! For RUC LSM only
+ mosaic_soil                         = 0,                                ! For RUC LSM only
+
+ sst_update                          = 1,                                ! option to use time-varying SST, seaice, vegetation fraction, and albedo during a model simulation (set before running real.exe)
+ num_soil_layers                     = 4,    !10,
+ num_land_cat                        = 21,    !24,
+
+ usemonalb                           = .true.                           ! When set to .true., it uses monthly albedo fields from geogrid, instead of table values
+ rdlai2d                             = .true.                           ! When set to .true., it uses monthly LAI data from geogrid (new in V3.6) and the field will also go to wrflowinp file if sst_update is 1.
+
+ sf_sfclay_physics                   = 5,     !5,5    !1,1   ! SURFACE LAYER OPTION
+ bl_pbl_physics                      = 5,     !5,5    !1,1 !YSU scheme
+ !megan_factors_file                  = 'megan21_emis_factors_c20130304.nc'
+ !input_pft                           = .false.,
+
+ !qzr turning MYNN EDMF opts off (0) as not integrated with SSM code 
+ bl_mynn_tkeadvect                   = .false.,       !.false.,.false.         ! (default) off; does not advect tke in MYNN scheme (default)
+ bl_mynn_tkebudget                   = 0,                   !0,0               ! 1- adds MYNN tke budget terms to output
+ bl_mynn_cloudpdf                    = 2,
+ bl_mynn_edmf                        = 0, !qzr Testing with MYNN EDMF OFF (since not compatible with SSM)  !1,  
+ bl_mynn_edmf_mom                    = 0, !qzr Testing with MYNN EDMF OFF (since not compatible with SSM)  !1,
+ bl_mynn_edmf_tke                    = 0,
+ bl_mynn_mixlength                   = 2,
+ bl_mynn_mixqt                       = 0,
+
+ grav_settling                       = 2,                    ! Fogdes (vegetation and wind speed dependent; Katata et al. 2008) at surface, and Dyunkerke in the atmosphere
+ iz0tlnd                             = 1,                   ! Chen-Zhang thermal roughness length over land, which depends on vegetation height
+ bldt                                = 0,         !0,0
+
+ cu_physics                          = 5,  !qzr Testing reverting to SSM Grell-3D ensemble !3,         !3,3  !5,5 !Possibly use 3 or 5 ! CUMULUS CLOUD OPTION
+ cugd_avedx                          = 1,   ! NUMBER OF GRID BOXES OVER WHICH SUBSIDENCE IS SPREAD !qzr Testing (uncommented since reverted to G-3D SSM original cu_physics setting, default, for large grid distances =1. 3 for dx< 5km ) 
+ cudt                                = 5, !qzr Testing reverting to SSM G-3D option !0,         !0,0 !5,5
+ cu_rad_feedback                     = .false.,  !qzr Testing reverting to SSM G-3D setting !.true.,       !.true.,.true.  !.false.,.false.
+ cu_diag                             = 0,  !qzr Testing, reverting to original SSM G-3D setting !1,            !1,1           !0,0
+ ishallow                            = 0,  ! SWITCH FOR SHALLOW CONVECTION
+
+ prec_acc_dt                         = 60.,                      ! bucket reset time interval between outputs for cumulus or grid-scale precipitation (in minutes)
+
+ shcu_physics                        = 0,                       ! independent shallow cumulus option (not tied to deep convection);
+
+
+ isfflx                              = 1,  ! HEAT AND MOISTURE FLUX FROM SURFACE
+ ifsnow                              = 1,  ! SNOWCOVER EFFECTS
+ icloud                              = 1,  ! CLOUD EFFECTS ON RADIATION
+
+ mp_zero_out                         = 2,  !0,      !2, !qzr Testing Uncommented to revert to cu_physics 5 (Grell-3D)
+ mp_zero_out_thresh                  = 1.e-10,   !qzr Testing Uncommented to revert to cu_physics 5 (Grell-3D)
+ maxiens                             = 1,     !qzr Testing Uncommented to revert to cu_physics 5 (Grell-3D)
+ maxens                              = 3,    !qzr Testing Uncommented to revert to cu_physics 5 (Grell-3D)
+ maxens2                             = 3,    !qzr Testing Uncommented to revert to cu_physics 5 (Grell-3D)
+ maxens3                             = 16,     !qzr Testing Uncommented to revert to cu_physics 5 (Grell-3D)
+ ensdim                              = 144,       !qzr Testing Uncommented to revert to cu_physics 5 (Grell-3D)
+
+ icloud_bl                           = 1,
+ traj_opt                            = 0,
+ dm_has_traj                         = .true., !If traj_opt=0, then no matter what other trajectory namelist variables settings, NO trajectory calculations take place
+ /
+
+ &dfi_control ! STANDS FOR DIGITAL FILTER
+ dfi_opt                             = 0         !qzr ADDED from RACM
+/
+
+ &grib2
+ /
+
+ &dynamics
+ hybrid_opt                          = 2,  !qzr EDITED to match racm2bvcp setting (ALSO CONSISTENT WITH WPS)!0,
+ km_opt                              = 4,  !4,4   ! EDDY COEFFICIENT OPTION
+ km_opt_dfi                          = 1,
+ diff_opt                            = 2,  !qzr EDITED based on RACM !1,1  ! TURBULENCE AND MIXING OPTION
+
+ c_s                                 = 0.25,   !qzr ADDED from RACM        ! Smagorinsky coeff
+
+ mix_full_fields                     = .false.,                          ! used with diff_opt = 2; value of .true. is recommended, except for highly idealized numerical tests; damp_opt must not be =1 if .true. is chosen; .false. means subtract 1D base-state profile before mixing (only for idealized)
+ rk_ord				     = 3   ! RUNGE-KUTTA ORDER FOR INTEGRATION !ONLY in SSM (also same in RACM namelist.output, checked)
+
+ damp_opt                            = 3,      !qzr EDITED from RACM !0,
+ zdamp                               = 5000.,  !5000.,5000. ! DAMPING DEPTH FROM MODEL TOP
+ dampcoef                            = 0.2,    !0.2,0.2
+ w_damping                           = 1,   ! VERTICAL VELOCITY DAMPING
+ !diff_opt                            = 1,1  ! TURBULENCE AND MIXING OPTION   
+ !km_opt                              = 4,4   ! EDDY COEFFICIENT OPTION
+   
+ diff_6th_opt                        = 2,     !0,0  !2-(qzr ADDED from RACM) 6th-order numerical diffusion nondimensional rate (max value 1.0 corresponds to complete removal of 2dx wave in one timestep)  
+ diff_6th_factor                     = 0.12,  !0.12,0.12 !Not sure  
+ gwd_opt                             = 0,      !qzr ADDED from RACM ! gravity wave drag option; use when grid size > 10 km (default is 0=off)
+
+ use_theta_m                         = 0, !qzr 0 to be consistent with WC-SSM code for MOSAIC NO3 !1, !same as in RACM (resolves tair differences probably?) !0,  !ONLY in SSM, qzr COMMNETED for now
+ !hybrid_opt                          = 2, !qzr EDITED to match racm2bvcp setting !0,
+
+ base_temp                           = 290.  ! BASE SEA-LEVEL TEMPERATURE
+ iso_temp                            = 200., !qzr ADDED from RACM ! isothermal temperature in statosphere; enables model to be extended to 5 mb; real only. Default value changed to 200 since V3.5
+
+ khdif                               = 0,    !0,0      ! HORIZONTAL DIFFUSION COEFFICIENT
+ kvdif                               = 0,    !0,0      ! VERTICAL DIFFUSION COEFFICIENT
+ smdiv                               = 0.1,    !qzr ADDED from RACM     ! divergence damping (0.1 is typical)
+ emdiv                               = 0.01,    !qzr ADDED from RACM     ! external-mode filter coef for mass coordinate model (0.01 is typical for real-data cases)
+ epssm                               = 0.1,     !qzr ADDED from RACM     ! time off-centering for vertical sound waves
+ time_step_sound                     = 4,   !4,4
+
+ h_mom_adv_order                     = 5,   !5,5 ! HORIZONTAL MOMENTUM ADVECTION ORDER
+ v_mom_adv_order                     = 3,   !3,3 ! VERTICAL MOMENTUM ADVECTION ORDER
+ h_sca_adv_order                     = 5,   !5,5 ! HORIZONTAL SCALAR ADVECTION ORDER
+ v_sca_adv_order                     = 3,   !3,3 ! VERTICAL SCALAR ADVECTION ORDER
+ non_hydrostatic                     = .true.,   !.true.,.true. 
+
+ use_input_w                         = .false.,  !qzr ADDED from RACM   ! whether to use vertical velocity from input file
+
+ moist_adv_opt                       = 2,    !2,2     
+ momentum_adv_opt                    = 1,
+ scalar_adv_opt                      = 2,    !2,2
+ chem_adv_opt                        = 2,    !2,2
+ tke_adv_opt                         = 2,    !2,2
+
+ do_avgflx_em                        = 1,
+ do_avgflx_cugd                      = 1,
+ /
+
+ &bdy_control
+ spec_bdy_width                      = 5,
+ spec_zone                           = 1,
+ relax_zone                          = 4,	
+ specified                           = .true.,    !.true.,.false.
+ nested                              = .false.,   !.false.,.true.
+ spec_exp                            = 0.         !qzr ADDED from RACM ! exponential multiplier for relaxation zone ramp for specified = .true.; default is 0. = linear ramp; 0.33 = ~3*DX exp decay factor (real only)
+ constant_bc                         = .false.,   !qzr ADDED from RACM ! constant boundary condition used with DFI (default is .false.)
+ /
+
+ &namelist_quilt
+ nio_tasks_per_group = 0,
+ nio_groups = 1,
+ /
+
+ &chem
+ kemit                               = 20, !qzr EDITED to match RACM !8 was in AMAZON case emission inputs !8,
+ chem_opt                            = 210,210,
+ !do_pvozone                          = .false.     !qzr ADDED from RACM
+ !phot_blcld                          = .true.      !qzr ADDED from RACM !compatible with MYNN and TUVx
+ bioemdt                             = 30.,30., ! THIS VALUE DOES NOT SEEM TO MATTER IN THE CODE.
+ !!photdt                              = 30.,30.,
+ chemdt                              = 0.,0.,
+
+ emiss_inpt_opt                      = 102,102,
+ io_style_emissions                  = 2,
+
+ phot_opt                            = 4,4,                      ! 1- uses Madronich photolysis (TUV)
+ photdt                              = 30.,30.,
+ is_full_tuv                         = .true.,
+ has_o3_exo_coldens                  = .false.,                 ! o3 column density above 50 km from WACCM climo
+ !scale_o3_to_grnd_exo_coldens        = .false.,	               ! total o3 column at ground NOT scaled to climatology
+ !scale_o3_to_du_at_grnd              = .false.                 ! scaled to the du_at_grnd value at the ground
+ !scale_o3_to_gfs_tot                 = .false.
+ pht_cldfrc_opt                      = 2,            ! grid cell cloud fraction is between ("either or" for opt = 1) 0 and 1
+ cld_od_opt                          = 1,            ! cloud optical depth is scaled by cloud fraction (opt = 2, cld**1.5)
+ gas_drydep_opt                      = 1,1,
+ aer_drydep_opt                      = 311,311, !311,0, !qzr Consistent with RACM (1,0) format !311,311,
+ aer_aerodynres_opt                  = 1,1, !1,    ! qzr Consistent with RACM format, just single value !1,1,
+ bio_emiss_opt                       = 2,2, !2,0,  !2,2, (qzr changed to 2,0 same as RACM)       !4,4              !!2,2  !!0,0  !!Testing with no biogenic emissions !4,4  ! 2- includes biogenic emissions reference fields in wrfinput data file and modify values online based upon the weather (BEIS wrfbiochemi)
+ emiss_opt                           = 3,3,  !!3 for Anthwrfchemi racm2b_vcp to SSM TEST !13,13          !!0,0  !Testing with no anthropogenic emissions !13,13
+ dmsemis_opt			     = 1,
+ ne_area                             = 10000, !117,      !qzr EDITED from RACM (BEIS314 instaed of MEGAN) !10000, !! THIS FOR BOTH DOMAINS??
+ dust_opt                            = 0,
+ gas_bc_opt                          = 101,101,
+ gas_ic_opt                          = 101,101,
+ aer_bc_opt                          = 101,101,
+ aer_ic_opt                          = 101,101,
+
+ gaschem_onoff                       = 1,1,
+ aerchem_onoff                       = 1,1, !1,0,  !qzr EDITED based on RACM !1,1
+
+ uq_aqsoa                            = 1,1,
+ vertmix_onoff                       = 1,1,  !0,0, !Sensitivity Turning vertmix off !1,1,
+ wetscav_onoff                       = 1,1, !1,  !qzr edited to RACM format just single value !1,1,
+ cldchem_onoff                       = 1,1,
+ aer_ra_feedback                     = 1,1, !1,  !qzr switch ON (same as RACM format just single value) !0, !1,1  !qzr commenting to test impact of MET or aer_rad_feedback on ebio_* BEIS
+ aer_op_opt                          = 1,1, !1,  !qzr edited to RACM format just single value !1,1,
+ aero_diag_opt                       = 1,1, !1, !qzr EDITED to RACM format just single value  !1,1,
+ aero_cw_diag_opt                    = 1,1, !1, !qzr EDITED to RACM format just single value  !1,1,
+ diagnostic_chem                     = 2,2,
+ chem_conv_tr                        = 1,0,  ! CONVECTIVE TRANSPORT
+ conv_tr_wetscav                     = 1,0,  ! WET SCAVENGING
+ have_bcs_chem                       = .true.,
+ have_bcs_tracer 		     = .true., 	     
+ diffb                               = 1e-19
+ kfOLIG                              = 1e-24
+ krOLIG                              = 1.6e-2
+ gammaOH                             = 1.0
+ pHETFRAG                            = 0.5
+
